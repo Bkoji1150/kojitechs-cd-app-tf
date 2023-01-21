@@ -33,12 +33,7 @@ provider "aws" {
 provider "kubernetes" {
   host                   = local.k8sendpoint
   cluster_ca_certificate = local.cluster_ca_certificate
-  # token                  = local.token
-  exec {
-    api_version = "client.authentication.k8s.io/v1alpha1"
-    args        = ["eks", "get-token", "--cluster-name", local.cluster_id]
-    command     = "aws"
-  }
+  token                  = local.token
 }
 
 provider "kubectl" {
@@ -46,7 +41,6 @@ provider "kubectl" {
   host                   = local.k8sendpoint
   cluster_ca_certificate = local.cluster_ca_certificate
   token                  = local.token
-  load_config_file       = "false"
 }
 
 data "terraform_remote_state" "kubernetes" {
