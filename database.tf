@@ -16,7 +16,7 @@ resource "aws_secretsmanager_secret" "this" {
 locals {
   db_secret = {
     endpoint = aws_db_instance.registration_app_db.address
-    dbname  = var.db_name
+    dbname   = var.db_name
     username = var.username
     password = random_password.password.result
     port     = var.port

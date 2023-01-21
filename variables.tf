@@ -26,7 +26,7 @@ variable "db_name" {
 variable "username" {
   type        = string
   description = "(optional) describe your variable"
-  default = "registeradmin"
+  default     = "registeradmin"
 }
 
 variable "port" {
@@ -49,12 +49,11 @@ variable "container_version" {
 variable "instance_class" {
   type        = string
   description = "(optional) describe your variable"
-  default = "db.t2.micro"
+  default     = "db.t2.micro"
 }
 
 variable "ecr_account_id" {
-    type = string
-    description = "(optional) describe your variable"
-    default = "735972722491"
+  type        = string
+  description = "(optional) describe your variable"
+  default     = "735972722491"
 }
-
