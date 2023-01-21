@@ -9,7 +9,7 @@ This pipeline deploy ci infrastructure
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=v1.3.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.0 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 1.13.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.7.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.0.1 |
 
 ## Providers

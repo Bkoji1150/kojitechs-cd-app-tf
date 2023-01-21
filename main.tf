@@ -21,7 +21,7 @@ terraform {
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
-      version = "1.13.0"
+      version = ">= 1.7.0"
     }
   }
 }
@@ -31,17 +31,15 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  host                   = local.k8sendpoint
-  cluster_ca_certificate = local.cluster_ca_certificate
-  token                  = local.token
+  config_path = "~/.kube/config"
 }
 
-provider "kubectl" {
+# provider "kubectl" {
 
-  host                   = local.k8sendpoint
-  cluster_ca_certificate = local.cluster_ca_certificate
-  token                  = local.token
-}
+#   host                   = local.k8sendpoint
+#   cluster_ca_certificate = local.cluster_ca_certificate
+#   token                  = local.token
+# }
 
 data "terraform_remote_state" "kubernetes" {
   backend = "s3"
