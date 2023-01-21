@@ -35,6 +35,7 @@ pipeline {
     }
         stage('Terraform plan'){
             steps {
+                withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {     
                     script {    
                         try{
                             sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
@@ -42,6 +43,8 @@ pipeline {
                             echo "Error occurred while running"
                             echo e.getMessage()
                             sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
+                        }
+                        
                         }
                     }
             }
@@ -58,7 +61,8 @@ pipeline {
     stage('Terraform apply or destroy ----------------') {
             steps {
             sh 'echo "continue"'
-            script{       
+            script{
+                withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {         
                 if (params.ACTION == "destroy"){
                     script {
                         try {
@@ -78,6 +82,7 @@ pipeline {
                             terraform  apply ${params.ENVIRONMENT}.plan
                         """ 
                 }  // if
+            }
             }
             } //steps
         }  //stage

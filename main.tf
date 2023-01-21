@@ -31,15 +31,17 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  host                   = local.k8sendpoint
+  cluster_ca_certificate = local.cluster_ca_certificate
+  token                  = local.token
 }
 
-# provider "kubectl" {
+provider "kubectl" {
 
-#   host                   = local.k8sendpoint
-#   cluster_ca_certificate = local.cluster_ca_certificate
-#   token                  = local.token
-# }
+  host                   = local.k8sendpoint
+  cluster_ca_certificate = local.cluster_ca_certificate
+  token                  = local.token
+}
 
 data "terraform_remote_state" "kubernetes" {
   backend = "s3"
