@@ -33,7 +33,12 @@ provider "aws" {
 provider "kubernetes" {
   host                   = local.k8sendpoint
   cluster_ca_certificate = local.cluster_ca_certificate
-  token                  = local.token
+  # token                  = local.token
+  exec {
+    api_version = "client.authentication.k8s.io/v1alpha1"
+    args        = ["eks", "get-token", "--cluster-name", local.cluster_id]
+    command     = "aws"
+  }
 }
 
 provider "kubectl" {

@@ -76,7 +76,7 @@ pipeline {
             }else {
                         sh"""
                             echo  "llego" + params.ACTION
-                            terraform  apply ${params.ENVIRONMENT}.plan
+                            terraform  apply ${params.ENVIRONMENT}.plan -no-color
                         """ 
                 }  // if
             }
