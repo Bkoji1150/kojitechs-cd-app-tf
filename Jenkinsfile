@@ -34,8 +34,7 @@ pipeline {
         }          
     }
         stage('Terraform plan'){
-            steps {
-                withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {     
+            steps { 
                     script {    
                         try{
                             sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
@@ -46,7 +45,6 @@ pipeline {
                         }
                         
                         }
-                    }
             }
         }
         stage('Confirm your action') {
@@ -61,8 +59,7 @@ pipeline {
     stage('Terraform apply or destroy ----------------') {
             steps {
             sh 'echo "continue"'
-            script{
-                withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {         
+            script{        
                 if (params.ACTION == "destroy"){
                     script {
                         try {
@@ -82,7 +79,6 @@ pipeline {
                             terraform  apply ${params.ENVIRONMENT}.plan
                         """ 
                 }  // if
-            }
             }
             } //steps
         }  //stage
