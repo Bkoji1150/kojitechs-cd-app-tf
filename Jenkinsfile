@@ -84,7 +84,13 @@ pipeline {
             }
             } //steps
         }  //stage
-    }
+        stage('Kubectl get kubenertes objecta') {
+            steps {
+                sh """
+                    kubectl get po,deploy,svc
+                """
+                }  
+            }
     post {
             success {
                 slackSend botUser: true, channel: 'jenkins_notification', color: 'good',
