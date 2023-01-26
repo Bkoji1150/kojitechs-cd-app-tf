@@ -37,7 +37,6 @@ No modules.
 | [aws_security_group_rule.db-security_ingress_access_on_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [kubernetes_deployment_v1.ums_deployment](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/deployment_v1) | resource |
 | [kubernetes_service_v1.lb_service_nlb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/service_v1) | resource |
-| [kubernetes_service_v1.np_service](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/service_v1) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [terraform_remote_state.kubernetes](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
@@ -46,6 +45,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | (optional) describe your variable | `string` | `"ci-cd-demo-eks"` | no |
 | <a name="input_component"></a> [component](#input\_component) | Name of the project we are working on | `string` | `"3-tier-architecture"` | no |
 | <a name="input_container_name"></a> [container\_name](#input\_container\_name) | (optional) describe your variable | `string` | `"ci-cd-demo-kojitechs-webapp"` | no |
 | <a name="input_container_version"></a> [container\_version](#input\_container\_version) | The image used to start a container. Up to 255 letters (uppercase and lowercase), numbers, hyphens, underscores, colons, periods, forward slashes, and number signs are allowed. | `string` | n/a | yes |

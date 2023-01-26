@@ -57,3 +57,9 @@ variable "ecr_account_id" {
   description = "(optional) describe your variable"
   default     = "735972722491"
 }
+
+variable "cluster_name" {
+  type        = string
+  description = "(optional) describe your variable"
+  default     = "ci-cd-demo-eks"
+}

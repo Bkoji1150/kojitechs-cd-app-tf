@@ -43,13 +43,14 @@ provider "kubectl" {
   token                  = local.token
 }
 
+
 data "terraform_remote_state" "kubernetes" {
   backend = "s3"
 
   config = {
     region = var.region
     bucket = var.state_bucket
-    key    = "path/env/kojitechs-ci-cd-demo-infra-pipeline-tf"
+    key    = format("env:/%s/path/env/kojitechs-ci-cd-demo-infra-pipeline-tf", terraform.workspace)
   }
 }
 
@@ -66,26 +67,6 @@ locals {
   cluster_ca_certificate = base64decode(local.certificate_authority)
   token                  = data.aws_eks_cluster_auth.cluster.token
   mysql                  = aws_secretsmanager_secret_version.registration_app
-}
-
-# Kubernetes Service Manifest (Type: Node Port Service)
-resource "kubernetes_service_v1" "np_service" {
-  depends_on = [aws_db_instance.registration_app_db]
-  metadata {
-    name = "usermgmt-webapp-np-service"
-  }
-  spec {
-    selector = {
-      app = kubernetes_deployment_v1.ums_deployment.spec.0.selector.0.match_labels.app
-    }
-    port {
-      name        = "http"
-      port        = 80
-      target_port = 8080
-      node_port   = 31280
-    }
-    type = "NodePort"
-  }
 }
 
 # Kubernetes Service Manifest (Type: Load Balancer)
