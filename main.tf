@@ -91,27 +91,6 @@ resource "kubernetes_service_v1" "lb_service_nlb" {
   }
 }
 
-# Kubernetes Service Manifest (Type: Node Port Service)
-resource "kubernetes_service_v1" "np_service" {
-  depends_on = [aws_db_instance.registration_app_db]
-  metadata {
-    name = "usermgmt-webapp-np-service"
-  }
-  spec {
-    selector = {
-      app = kubernetes_deployment_v1.ums_deployment.spec.0.selector.0.match_labels.app
-    }
-    port {
-      name        = "http"
-      port        = 80
-      target_port = 8080
-      node_port   = 31280
-    }
-    type = "NodePort"
-  }
-}
-
-
 resource "kubernetes_deployment_v1" "ums_deployment" {
   depends_on = [aws_db_instance.registration_app_db]
   metadata {
