@@ -91,6 +91,7 @@ pipeline {
                 """
                 }  
             }
+    }        
     post {
             success {
                 slackSend botUser: true, channel: 'jenkins_notification', color: 'good',
@@ -111,5 +112,6 @@ pipeline {
                 cleanWs()
             }
         }
-}
+}    
+
  
