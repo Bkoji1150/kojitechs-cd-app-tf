@@ -107,7 +107,7 @@ resource "kubernetes_deployment_v1" "ums_deployment" {
     }
   }
   spec {
-    replicas = 1
+    replicas = 2
 
     selector {
       match_labels = {
