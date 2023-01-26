@@ -1,14 +1,14 @@
 
 pipeline {
-        agent any
+    agent any
+    
     parameters { 
         string(name: 'REPO_NAME', description: 'PROVIDER THE NAME OF ECR REPO', defaultValue: 'ci-cd-demo-kojitechs-webapp')
         string(name: 'REPO_URL', description: 'PROVIDER THE NAME OF DOCKERHUB/ECR URL', defaultValue: '735972722491.dkr.ecr.us-east-1.amazonaws.com')
-        choice(name: 'ENVIRONMENT', choices: ['default', 'prod', 'sbx', 'default'], description: "SELECT THE ACCOUNT YOU'D LIKE TO DEPLOY TO.")
+        choice(name: 'ENVIRONMENT', choices: ['sbx', 'prod', 'sbx', 'dev'], description: "SELECT THE ACCOUNT YOU'D LIKE TO DEPLOY TO.")
         choice(name: 'ACTION', choices: ['apply', 'apply', 'destroy'], description: 'Select action, BECAREFUL IF YOU SELECT DESTROY TO PROD')
         string(name: 'container_version', defaultValue: 'latest', description: 'provide the container version for app',)
     }
-
     stages{    
         stage('TerraformInit'){
             steps {          
