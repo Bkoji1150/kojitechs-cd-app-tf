@@ -23,11 +23,18 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = ">= 1.7.0"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.1"
+    }
   }
 }
 
 provider "aws" {
   region = var.region
+}
+
+provider "null" {
 }
 
 provider "kubernetes" {
@@ -145,5 +152,22 @@ resource "kubernetes_deployment_v1" "ums_deployment" {
         }
       }
     }
+  }
+}
+
+resource "null_resource" "merge_kubeconfig" {
+  triggers = {
+    always = timestamp()
+  }
+  depends_on = [data.terraform_remote_state.kubernetes]
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<EOT
+      set -e
+      echo 'Applying Auth ConfigMap with kubectl...'
+      aws eks wait cluster-active --name '${local.cluster_id}'
+      aws eks update-kubeconfig --name '${local.cluster_id}' --alias '${local.cluster_id}-${var.region}' --region=${var.region}
+    EOT
   }
 }
