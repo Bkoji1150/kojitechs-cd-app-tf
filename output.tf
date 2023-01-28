@@ -1,6 +1,6 @@
 
-output "alb_endpoint" {
-  value = "http://${kubernetes_service_v1.lb_service_nlb.status.0.load_balancer.0.ingress.0.hostname}"
+output "dns_name" {
+  value = format("htpps://%s.%s", "www", var.domain_name)
 }
 
 # Output: AWS IAM Open ID Connect Provider ARN
