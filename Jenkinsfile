@@ -9,69 +9,66 @@ pipeline {
     }
     stages{    
         stage('TerraformInit'){
-            steps {   
-            script {
-                 withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
-       
-                sh """
-                    rm -rf .terraform 
-                    terraform   init -upgrade=true
-                    echo \$PWD
-                    whoami
-                """
-                }
-            
-            }
-        }
-        }
-        stage('Create Terraform workspace'){
-            steps {
-                script {
-                    try {
-                        sh "terraform  workspace select ${params.ENVIRONMENT}"
-                    } catch (Exception e) {
-                        echo "Error occurred: ${e.getMessage()}"
-                        sh """
-                            terraform  workspace new ${params.ENVIRONMENT}
-                            terraform  workspace select ${params.ENVIRONMENT}
+                steps {
+                      withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {           
+                          sh """
+                            rm -rf .terraform 
+                            terraform init -upgrade=true
+                            echo \$PWD
+                            whoami
                         """
-                    }
-    
+                   }
                 }
-            }          
+            }
+        stage('Create Terraform workspace'){
+                steps {
+                   withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {  
+                    script {
+                        try {
+                            sh "terraform workspace select ${params.ENVIRONMENT}"
+                        } catch (Exception e) {
+                            echo "Error occurred: ${e.getMessage()}"
+                            sh """
+                                terraform workspace new ${params.ENVIRONMENT}
+                                terraform workspace select ${params.ENVIRONMENT}
+                            """
+                        }
+        
+                    }
+            }
+                }          
         }
         stage('Terraform plan'){
-            steps { 
-                    script {    
-                        withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
-
-                        try{
-                            sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
-                        }catch (Exception e){
-                            echo "Error occurred while running"
-                            echo e.getMessage()
-                            sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
-                        }  
-                    }    
+                steps {
+                        script {
+                           withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {     
+                            try{
+                                sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
+                            } catch (Exception e){
+                                echo "Error occurred while running"
+                                echo e.getMessage()
+                                sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
+                            }
+                        }
+                     }
                 }
-            }
         }
         stage('Confirm your action') {
-            steps {
-                script {
-                    timeout(time: 5, unit: 'MINUTES') {
-                    def userInput = input(id: 'confirm', message: params.ACTION + '?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
-                }
+                steps {
+                    script {
+                        timeout(time: 5, unit: 'MINUTES') {
+                        def userInput = input(id: 'confirm', message: params.ACTION + '?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+                    }
                 }  
             }
         }
         stage('Terraform apply or destroy ----------------') {
-            steps {
+                steps {
                 sh 'echo "continue"'
-                script{        
+                script{  
+                    withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {       
                     if (params.ACTION == "destroy"){
                         script {
-                        withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
                             try {
                                 sh """
                                     echo "llego" + params.ACTION
@@ -79,18 +76,18 @@ pipeline {
                                 """
                             } catch (Exception e){
                                 echo "Error occurred: ${e}"
-                                sh "terraform  destroy -var  container_version='${params.container_version}' -no-color -auto-approve"
+                                sh "terraform  destroy -var container_version='${params.container_version}' -no-color -auto-approve"
                             }
                         }
                         
-                }else {
+                    }else {
                         sh"""
                             echo  "llego" + params.ACTION
-                            terraform  apply ${params.ENVIRONMENT}.plan -no-color
+                            terraform apply ${params.ENVIRONMENT}.plan
                         """ 
                         }  // if
                     }
-                } 
+                }
                 } //steps
             }  //stage
             stage('Kubectl get kubenertes objecta') {
@@ -100,7 +97,7 @@ pipeline {
                     """
                 }  
             }
-    }        
+        }        
     post {
         success {
             slackSend botUser: true, channel: 'jenkins_notification', color: 'good',
