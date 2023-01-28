@@ -27,11 +27,21 @@ terraform {
       source  = "hashicorp/null"
       version = "~> 3.1"
     }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "= 2.5.1"
+    }
   }
 }
 
 provider "aws" {
   region = var.region
+  assume_role {
+    role_arn = "arn:aws:iam::${lookup(var.aws_account_id, terraform.workspace)}:role/Role_For-S3_Creation"
+  }
+  default_tags {
+    tags = module.required_tags.aws_default_tags
+  }
 }
 
 provider "null" {
@@ -43,6 +53,14 @@ provider "kubernetes" {
   token                  = local.token
 }
 
+provider "helm" {
+  kubernetes {
+    host                   = local.k8sendpoint
+    cluster_ca_certificate = local.cluster_ca_certificate
+    token                  = local.token
+  }
+}
+
 provider "kubectl" {
 
   host                   = local.k8sendpoint
@@ -50,39 +68,49 @@ provider "kubectl" {
   token                  = local.token
 }
 
-
-data "terraform_remote_state" "kubernetes" {
-  backend = "s3"
-
-  config = {
-    region = var.region
-    bucket = var.state_bucket
-    key    = format("env:/%s/path/env/kojitechs-ci-cd-demo-infra-pipeline-tf", terraform.workspace)
-  }
-}
-
 data "aws_eks_cluster_auth" "cluster" {
   name = local.cluster_id
 }
 
 locals {
-  vpc_id                 = data.terraform_remote_state.kubernetes.outputs.vpc_id
-  kubernetes_cert        = data.terraform_remote_state.kubernetes.outputs
-  k8sendpoint            = local.kubernetes_cert.cluster_endpoint
-  certificate_authority  = local.kubernetes_cert.cluster_certificate_authority_data
-  cluster_id             = local.kubernetes_cert.cluster_id
-  cluster_ca_certificate = base64decode(local.certificate_authority)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  mysql                  = aws_secretsmanager_secret_version.registration_app
+  k8sendpoint                                    = aws_eks_cluster.eks_cluster.endpoint
+  cluster_id                                     = aws_eks_cluster.eks_cluster.id
+  cluster_ca_certificate                         = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+  token                                          = data.aws_eks_cluster_auth.cluster.token
+  mysql                                          = aws_secretsmanager_secret_version.registration_app
+  eks_default_security_group_id                  = aws_eks_cluster.eks_cluster.vpc_config[0].cluster_security_group_id
+  openid_connect_provider_arn                    = aws_iam_openid_connect_provider.oidc_provider.arn
+  aws_iam_oidc_connect_provider_extract_from_arn = element(split("oidc-provider/", "${aws_iam_openid_connect_provider.oidc_provider.arn}"), 1)
+}
+
+module "required_tags" {
+  source = "git::https://github.com/Bkoji1150/kojitechs-tf-aws-required-tags.git?ref=v1.0.0"
+
+  line_of_business        = var.line_of_business
+  ado                     = var.ado
+  tier                    = var.tier
+  operational_environment = upper(terraform.workspace)
+  tech_poc_primary        = var.tech_poc_primary
+  tech_poc_secondary      = var.builder
+  application             = var.application
+  builder                 = var.builder
+  application_owner       = var.application_owner
+  vpc                     = var.vpc
+  cell_name               = var.cell_name
+  component_name          = var.component_name
 }
 
 # Kubernetes Service Manifest (Type: Load Balancer)
 resource "kubernetes_service_v1" "lb_service_nlb" {
-  depends_on = [aws_db_instance.registration_app_db]
+  depends_on = [
+    aws_db_instance.registration_app_db,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_nodegroup
+  ]
   metadata {
     name = "myapp1-service-nlb"
     annotations = {
-      "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb" # To create Network Load Balancer  
+      "alb.ingress.kubernetes.io/healthcheck-path" = "/"
     }
   }
   spec {
@@ -94,12 +122,16 @@ resource "kubernetes_service_v1" "lb_service_nlb" {
       port        = 80
       target_port = 8080
     }
-    type = "LoadBalancer"
+    type = "NodePort"
   }
 }
 
 resource "kubernetes_deployment_v1" "ums_deployment" {
-  depends_on = [aws_db_instance.registration_app_db]
+  depends_on = [
+    aws_db_instance.registration_app_db,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_nodegroup
+  ]
   metadata {
     name = "usermgmt-webapp"
     labels = {
@@ -156,11 +188,14 @@ resource "kubernetes_deployment_v1" "ums_deployment" {
 }
 
 resource "null_resource" "merge_kubeconfig" {
+  depends_on = [
+    aws_db_instance.registration_app_db,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_nodegroup
+  ]
   triggers = {
     always = timestamp()
   }
-  depends_on = [data.terraform_remote_state.kubernetes]
-
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT

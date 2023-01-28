@@ -30,7 +30,7 @@ resource "aws_secretsmanager_secret_version" "registration_app" {
 
 resource "aws_db_subnet_group" "subnet_group" {
   name       = "subnet-group"
-  subnet_ids = local.kubernetes_cert.private_subnets
+  subnet_ids = local.private_subnet
 }
 
 resource "aws_security_group" "registration-database-sg" {
@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "db-security_ingress_access_on_http" {
   from_port                = var.port
   to_port                  = var.port
   protocol                 = "tcp"
-  source_security_group_id = local.kubernetes_cert.cluster_primary_security_group_id
+  source_security_group_id = local.eks_default_security_group_id
 }
 
 resource "aws_db_instance" "registration_app_db" {
