@@ -22,7 +22,6 @@ This pipeline deploy ci infrastructure
 | <a name="provider_helm"></a> [helm](#provider\_helm) | = 2.5.1 |
 | <a name="provider_http"></a> [http](#provider\_http) | n/a |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.16.1 |
-| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
@@ -72,7 +71,6 @@ This pipeline deploy ci infrastructure
 | [kubernetes_ingress_class_v1.ingress_class_default](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/ingress_class_v1) | resource |
 | [kubernetes_ingress_v1.ingress](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/ingress_v1) | resource |
 | [kubernetes_service_v1.lb_service_nlb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/service_v1) | resource |
-| [null_resource.merge_kubeconfig](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |

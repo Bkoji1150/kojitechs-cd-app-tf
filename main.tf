@@ -186,20 +186,3 @@ resource "kubernetes_deployment_v1" "ums_deployment" {
     }
   }
 }
-
-resource "null_resource" "merge_kubeconfig" {
-  depends_on = [
-    aws_db_instance.registration_app_db,
-    aws_eks_cluster.eks_cluster,
-    aws_eks_node_group.eks_nodegroup
-  ]
-  triggers = {
-    always = timestamp()
-  }
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<EOT
-      aws eks update-kubeconfig --name '${local.cluster_name}' --alias '${local.cluster_name}-${var.region}' --region=${var.region}
-    EOT
-  }
-}
