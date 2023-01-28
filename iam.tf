@@ -150,7 +150,7 @@ locals {
       groups   = ["system:bootstrappers", "system:nodes"]
     },
     {
-      rolearn  = "${data.aws_iam_role.this.arn}"
+      rolearn  = "arn:aws:iam::${lookup(var.aws_account_id, terraform.workspace)}:role/Role_For-S3_Creation"
       username = "jenkins-admin"
       groups   = ["system:masters"]
     },

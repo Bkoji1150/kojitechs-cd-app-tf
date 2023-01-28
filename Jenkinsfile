@@ -9,14 +9,20 @@ pipeline {
     }
     stages{    
         stage('TerraformInit'){
-            steps {          
+            steps {   
+            script {
+                 withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
+       
                 sh """
                     rm -rf .terraform 
                     terraform   init -upgrade=true
                     echo \$PWD
                     whoami
                 """
+                }
+            
             }
+        }
         }
         stage('Create Terraform workspace'){
             steps {
@@ -37,16 +43,17 @@ pipeline {
         stage('Terraform plan'){
             steps { 
                     script {    
-                
+                        withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
+
                         try{
                             sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
-                        } catch (Exception e){
+                        }catch (Exception e){
                             echo "Error occurred while running"
                             echo e.getMessage()
                             sh "terraform  plan -var container_version='${params.container_version}' -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
-                        }
-                        
-                        }
+                        }  
+                    }    
+                }
             }
         }
         stage('Confirm your action') {
@@ -64,6 +71,7 @@ pipeline {
                 script{        
                     if (params.ACTION == "destroy"){
                         script {
+                        withAWS(roleAccount:'674293488770', role:'Role_For-S3_Creation') {  
                             try {
                                 sh """
                                     echo "llego" + params.ACTION
@@ -76,19 +84,20 @@ pipeline {
                         }
                         
                 }else {
-                            sh"""
-                                echo  "llego" + params.ACTION
-                                terraform  apply ${params.ENVIRONMENT}.plan -no-color
-                            """ 
+                        sh"""
+                            echo  "llego" + params.ACTION
+                            terraform  apply ${params.ENVIRONMENT}.plan -no-color
+                        """ 
                         }  // if
                     }
+                } 
                 } //steps
             }  //stage
-        stage('Kubectl get kubenertes objecta') {
-            steps {
-                sh """
-                    kubectl get po,deploy,svc
-                """
+            stage('Kubectl get kubenertes objecta') {
+                steps {
+                    sh """
+                        kubectl get po,deploy,svc
+                    """
                 }  
             }
     }        
@@ -112,6 +121,6 @@ pipeline {
             cleanWs()
         }
     }
-}    
+}
 
  
