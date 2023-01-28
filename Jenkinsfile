@@ -90,15 +90,6 @@ pipeline {
                 }
                 } //steps
             }  //stage
-            stage('Kubectl get kubenertes objecta') {
-                steps {
-                     withAWS(roleAccount:'181437319056', role:'ci-cd-demo-jenkins-role') {  
-                    sh """
-                        kubectl get po,deploy,svc
-                    """
-                }  
-            }
-            }
         }        
     post {
         success {
