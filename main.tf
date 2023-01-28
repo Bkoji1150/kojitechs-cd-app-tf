@@ -199,8 +199,8 @@ resource "null_resource" "merge_kubeconfig" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
-      aws eks wait cluster-active --name '${local.cluster_id}'
-      aws eks update-kubeconfig --name '${local.cluster_id}' --alias '${local.cluster_id}-${var.region}' --region=${var.region}
+      aws eks wait cluster-active --name '${local.cluster_name}'
+      aws eks update-kubeconfig --name '${local.cluster_name}' --alias '${local.cluster_name}-${var.region}' --region=${var.region}
     EOT
   }
 }
