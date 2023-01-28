@@ -92,11 +92,9 @@ pipeline {
             }  //stage
             stage('Kubectl get kubenertes objecta') {
                 steps {
-                     withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {  
                     sh """
                         kubectl get po,deploy,svc
                     """
-                }  
             }
             }
         }        
