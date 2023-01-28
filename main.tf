@@ -115,7 +115,7 @@ resource "kubernetes_service_v1" "lb_service_nlb" {
   }
   spec {
     selector = {
-      app = kubernetes_deployment_v1.ums_deployment.spec.0.selector.0.match_labels.app
+      app = "usermgmt-webapp"
     }
     port {
       name        = "http"
