@@ -43,11 +43,11 @@ pipeline {
                         script {
                            withAWS(roleAccount:'735972722491', role:'Role_For-S3_Creation') {     
                             try{
-                                sh "terraform  plan -var container_version='${params.container_version}' var-file ${params.ENVIRONMENT}.tfvars -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
+                                sh "terraform  plan -var container_version='${params.container_version}' -var-file ${params.ENVIRONMENT}.tfvars -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
                             } catch (Exception e){
                                 echo "Error occurred while running"
                                 echo e.getMessage()
-                                sh "terraform  plan -var container_version='${params.container_version}' var-file ${params.ENVIRONMENT}.tfvars  -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
+                                sh "terraform  plan -var container_version='${params.container_version}' -var-file ${params.ENVIRONMENT}.tfvars  -refresh=true -lock=false -no-color -out='${params.ENVIRONMENT}.plan'"
                             }
                         }
                      }
@@ -72,11 +72,11 @@ pipeline {
                             try {
                                 sh """
                                     echo "llego" + params.ACTION
-                                    terraform  destroy -var container_version='${params.container_version}' var-file ${params.ENVIRONMENT}.tfvars  -no-color -auto-approve
+                                    terraform  destroy -var container_version='${params.container_version}' -var-file ${params.ENVIRONMENT}.tfvars  -no-color -auto-approve
                                 """
                             } catch (Exception e){
                                 echo "Error occurred: ${e}"
-                                sh "terraform  destroy -var container_version='${params.container_version}' var-file ${params.ENVIRONMENT}.tfvars  -no-color -auto-approve"
+                                sh "terraform  destroy -var container_version='${params.container_version}' -var-file ${params.ENVIRONMENT}.tfvars  -no-color -auto-approve"
                             }
                         }
                         
