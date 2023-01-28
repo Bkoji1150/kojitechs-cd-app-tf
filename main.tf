@@ -100,88 +100,88 @@ module "required_tags" {
   component_name          = var.component_name
 }
 
-# # Kubernetes Service Manifest (Type: Load Balancer)
-# resource "kubernetes_service_v1" "lb_service_nlb" {
-#     depends_on = [
-#     aws_db_instance.registration_app_db,
-#     aws_eks_cluster.eks_cluster,
-#     aws_eks_node_group.eks_nodegroup
-#   ]
-#   metadata {
-#     name = "myapp1-service-nlb"
-#     annotations = {
-#       "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb" # To create Network Load Balancer  
-#     }
-#   }
-#   spec {
-#     selector = {
-#       app = kubernetes_deployment_v1.ums_deployment.spec.0.selector.0.match_labels.app
-#     }
-#     port {
-#       name        = "http"
-#       port        = 80
-#       target_port = 8080
-#     }
-#     type = "LoadBalancer"
-#   }
-# }
-# resource "kubernetes_deployment_v1" "ums_deployment" {
-#   depends_on = [
-#     aws_db_instance.registration_app_db,
-#     aws_eks_cluster.eks_cluster,
-#     aws_eks_node_group.eks_nodegroup
-#   ]
-#   metadata {
-#     name = "usermgmt-webapp"
-#     labels = {
-#       app = "usermgmt-webapp"
-#     }
-#   }
-#   spec {
-#     replicas = 2
+# Kubernetes Service Manifest (Type: Load Balancer)
+resource "kubernetes_service_v1" "lb_service_nlb" {
+  depends_on = [
+    aws_db_instance.registration_app_db,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_nodegroup
+  ]
+  metadata {
+    name = "myapp1-service-nlb"
+    annotations = {
+      "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb" # To create Network Load Balancer  
+    }
+  }
+  spec {
+    selector = {
+      app = kubernetes_deployment_v1.ums_deployment.spec.0.selector.0.match_labels.app
+    }
+    port {
+      name        = "http"
+      port        = 80
+      target_port = 8080
+    }
+    type = "LoadBalancer"
+  }
+}
+resource "kubernetes_deployment_v1" "ums_deployment" {
+  depends_on = [
+    aws_db_instance.registration_app_db,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_nodegroup
+  ]
+  metadata {
+    name = "usermgmt-webapp"
+    labels = {
+      app = "usermgmt-webapp"
+    }
+  }
+  spec {
+    replicas = 2
 
-#     selector {
-#       match_labels = {
-#         app = "usermgmt-webapp"
-#       }
-#     }
+    selector {
+      match_labels = {
+        app = "usermgmt-webapp"
+      }
+    }
 
-#     template {
-#       metadata {
-#         labels = {
-#           app = "usermgmt-webapp"
-#         }
-#       }
+    template {
+      metadata {
+        labels = {
+          app = "usermgmt-webapp"
+        }
+      }
 
-#       spec {
-#         container {
-#           image = format("%s.dkr.ecr.us-east-1.amazonaws.com/%s:%s", var.ecr_account_id, var.container_name, var.container_version)
-#           name  = "usermgmt-webapp"
-#           port {
-#             container_port = "8080"
-#           }
-#           env {
-#             name  = "DB_HOSTNAME"
-#             value = jsondecode(local.mysql.secret_string)["endpoint"]
-#           }
-#           env {
-#             name  = "DB_PORT"
-#             value = jsondecode(local.mysql.secret_string)["port"]
-#           }
-#           env {
-#             name  = "DB_PASSWORD"
-#             value = jsondecode(local.mysql.secret_string)["password"]
-#           }
-#           env {
-#             name  = "DB_NAME"
-#             value = jsondecode(local.mysql.secret_string)["dbname"]
-#           }
-#           env {
-#             name  = "DB_USERNAME"
-#             value = jsondecode(local.mysql.secret_string)["username"]
-#           }
-#         }
-#       }
-#     }
-#   }
-# }
+      spec {
+        container {
+          image = format("%s.dkr.ecr.us-east-1.amazonaws.com/%s:%s", var.ecr_account_id, var.container_name, var.container_version)
+          name  = "usermgmt-webapp"
+          port {
+            container_port = "8080"
+          }
+          env {
+            name  = "DB_HOSTNAME"
+            value = jsondecode(local.mysql.secret_string)["endpoint"]
+          }
+          env {
+            name  = "DB_PORT"
+            value = jsondecode(local.mysql.secret_string)["port"]
+          }
+          env {
+            name  = "DB_PASSWORD"
+            value = jsondecode(local.mysql.secret_string)["password"]
+          }
+          env {
+            name  = "DB_NAME"
+            value = jsondecode(local.mysql.secret_string)["dbname"]
+          }
+          env {
+            name  = "DB_USERNAME"
+            value = jsondecode(local.mysql.secret_string)["username"]
+          }
+        }
+      }
+    }
+  }
+}
