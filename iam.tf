@@ -149,11 +149,11 @@ locals {
       username = "system:node:{{EC2PrivateDNSName}}"
       groups   = ["system:bootstrappers", "system:nodes"]
     },
-    {
-      rolearn  = "arn:aws:iam::${lookup(var.aws_account_id, terraform.workspace)}:role/Role_For-S3_Creation"
-      username = "jenkins-admin"
-      groups   = ["system:masters"]
-    },
+    # {
+    #   rolearn  = "arn:aws:iam::${lookup(var.aws_account_id, terraform.workspace)}:role/Role_For-S3_Creation"
+    #   username = "jenkins-admin"
+    #   groups   = ["system:masters"]
+    # },
     {
       rolearn  = "arn:aws:iam::181437319056:role/ci-cd-demo-jenkins-role"
       username = "jenkins-role"
