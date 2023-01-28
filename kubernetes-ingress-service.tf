@@ -11,7 +11,7 @@ resource "kubernetes_ingress_v1" "ingress" {
       # Load Balancer Name
       "alb.ingress.kubernetes.io/load-balancer-name" = "kojitechs-myapp-alb"
       # Ingress Core Settings
-      "alb.ingress.kubernetes.io/scheme" = "internal"
+      "alb.ingress.kubernetes.io/scheme" = "internet-facing"
       # Health Check Settings
       "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTP"
       "alb.ingress.kubernetes.io/healthcheck-port"     = "traffic-port"
