@@ -122,7 +122,7 @@ resource "kubernetes_service_v1" "lb_service_nlb" {
       port        = 80
       target_port = 8080
     }
-    type = "NodePort"
+    type = "LoadBalancer"
   }
 }
 
