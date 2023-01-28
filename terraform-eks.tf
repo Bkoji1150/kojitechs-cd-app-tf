@@ -9,10 +9,6 @@ data "terraform_remote_state" "operational_vpc" {
   }
 }
 
-data "aws_iam_role" "this" {
-  name = "ci-cd-demo-jenkins-role"
-}
-
 locals {
   cluster_name    = "${var.component_name}-eks"
   operational_vpc = data.terraform_remote_state.operational_vpc.outputs

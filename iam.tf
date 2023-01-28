@@ -154,6 +154,11 @@ locals {
       username = "jenkins-admin"
       groups   = ["system:masters"]
     },
+    {
+      rolearn  = "arn:aws:iam::181437319056:role/ci-cd-demo-jenkins-role"
+      username = "jenkins-role"
+      groups   = ["system:masters"]
+    },
   ]
 }
 

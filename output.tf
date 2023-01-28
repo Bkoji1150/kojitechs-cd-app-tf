@@ -1,6 +1,6 @@
 
 output "dns_name" {
-  value = format("htpps://%s.%s.%s", "www", var.domain_name)
+  value = format("htpps://%s.%s", "www", var.domain_name)
 }
 
 # Output: AWS IAM Open ID Connect Provider ARN
