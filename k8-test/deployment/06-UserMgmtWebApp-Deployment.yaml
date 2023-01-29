@@ -16,13 +16,13 @@ spec:
     spec:
       containers:
         - name: usermgmt-webapp
-          image: 735972722491.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp
+          image: 181437319056.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp:e79a69673ea1244
           imagePullPolicy: Always
           ports: 
             - containerPort: 8080           
           env:
             - name: DB_HOSTNAME
-              value: "terraform-20230128212013300500000009.cd1a837ihpxk.us-east-1.rds.amazonaws.com"            
+              value: "terraform-20230128063746554900000009.cesngpv0jwyf.us-east-1.rds.amazonaws.com"            
             - name: DB_PORT
               value: "3306"            
             - name: DB_NAME
@@ -30,4 +30,4 @@ spec:
             - name: DB_USERNAME
               value: "registeradmin"            
             - name: DB_PASSWORD
-              value: "q6PVVaylSlZdXYmb"
+              value: "CC8IFs9rPJNs1yUd"
