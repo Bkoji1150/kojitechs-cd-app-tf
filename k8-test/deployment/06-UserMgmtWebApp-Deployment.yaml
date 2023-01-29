@@ -5,9 +5,9 @@ metadata:
   name: usermgmt-webapp
   labels:
     app: usermgmt-webapp
-  annotations:  
+  annotations:
     fluxcd.io/tag.example-app: semver:~latest
-    fluxcd.io/automated: 'true'  
+    fluxcd.io/automated: 'true'
 spec:
   replicas: 3
   selector:
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: usermgmt-webapp
-        image: 181437319056.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp:e79a69673ea1244
+        image: 181437319056.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp:b8be5009ce98656
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
