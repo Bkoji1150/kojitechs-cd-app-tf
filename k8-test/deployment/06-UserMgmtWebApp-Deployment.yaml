@@ -9,7 +9,7 @@ metadata:
     fluxcd.io/tag.example-app: semver:~latest
     fluxcd.io/automated: 'true'  
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: usermgmt-webapp
