@@ -1,5 +1,6 @@
+---
 apiVersion: apps/v1
-kind: Deployment 
+kind: Deployment
 metadata:
   name: usermgmt-webapp
   labels:
@@ -12,25 +13,25 @@ spec:
   selector:
     matchLabels:
       app: usermgmt-webapp
-  template:  
+  template:
     metadata:
-      labels: 
+      labels:
         app: usermgmt-webapp
     spec:
       containers:
-        - name: usermgmt-webapp
-          image: 181437319056.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp:latest
-          imagePullPolicy: Always
-          ports: 
-            - containerPort: 8080           
-          env:
-            - name: DB_HOSTNAME
-              value: "terraform-20230128063746554900000009.cesngpv0jwyf.us-east-1.rds.amazonaws.com"            
-            - name: DB_PORT
-              value: "3306"            
-            - name: DB_NAME
-              value: "webappdb"            
-            - name: DB_USERNAME
-              value: "registeradmin"            
-            - name: DB_PASSWORD
-              value: "CC8IFs9rPJNs1yUd"
+      - name: usermgmt-webapp
+        image: 181437319056.dkr.ecr.us-east-1.amazonaws.com/ci-cd-demo-kojitechs-webapp:e79a69673ea1244
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOSTNAME
+          value: "terraform-20230128063746554900000009.cesngpv0jwyf.us-east-1.rds.amazonaws.com"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "webappdb"
+        - name: DB_USERNAME
+          value: "registeradmin"
+        - name: DB_PASSWORD
+          value: "CC8IFs9rPJNs1yUd"
