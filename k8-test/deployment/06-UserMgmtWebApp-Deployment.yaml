@@ -5,7 +5,7 @@ metadata:
   labels:
     app: usermgmt-webapp
   annotations:  
-    fluxcd.io/tag.example-app: semver:~e79a6967
+    fluxcd.io/tag.example-app: semver:~latest
     fluxcd.io/automated: 'true'  
 spec:
   replicas: 1
