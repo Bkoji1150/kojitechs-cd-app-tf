@@ -67,9 +67,7 @@ This pipeline deploy ci infrastructure
 | [kubernetes_cluster_role_binding_v1.eksdeveloper_clusterrolebinding](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/cluster_role_binding_v1) | resource |
 | [kubernetes_cluster_role_v1.eksdeveloper_clusterrole](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/cluster_role_v1) | resource |
 | [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/config_map_v1) | resource |
-| [kubernetes_deployment_v1.ums_deployment](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/deployment_v1) | resource |
 | [kubernetes_ingress_class_v1.ingress_class_default](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/ingress_class_v1) | resource |
-| [kubernetes_service_v1.lb_service_nlb](https://registry.terraform.io/providers/hashicorp/kubernetes/2.16.1/docs/resources/service_v1) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
